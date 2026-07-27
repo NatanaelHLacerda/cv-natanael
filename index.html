@@ -375,58 +375,79 @@ class Component extends DCLogic {
 }
 </script>
 <script>
+/* Carrossel de projetos.
+   A pagina e um documento x-dc: o support.js re-renderiza o conteudo de <x-dc>
+   via React depois do load, trocando os nos do DOM. Por isso tudo aqui usa
+   delegacao no document e re-resolve os elementos na hora do evento — listener
+   preso no no original morre no re-render. */
 (function () {
-  function init() {
-    var track = document.getElementById('projetos-track');
-    var dotsWrap = document.getElementById('projetos-dots');
-    var prevBtn = document.getElementById('projetos-prev');
-    var nextBtn = document.getElementById('projetos-next');
-    if (!track || !dotsWrap || !prevBtn || !nextBtn) return;
+  function track() { return document.getElementById('projetos-track'); }
+  function dots() {
+    var wrap = document.getElementById('projetos-dots');
+    return wrap ? Array.prototype.slice.call(wrap.querySelectorAll('.carrossel-dot')) : [];
+  }
 
-    var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll('.carrossel-dot'));
+  function stepWidth(t) {
+    var card = t.querySelector('.projeto-card');
+    if (!card) return t.clientWidth;
+    var gap = parseFloat(getComputedStyle(t).gap) || 0;
+    return card.getBoundingClientRect().width + gap;
+  }
 
-    function stepWidth() {
-      var card = track.querySelector('.projeto-card');
-      if (!card) return track.clientWidth;
-      var gap = parseFloat(getComputedStyle(track).gap) || 0;
-      return card.getBoundingClientRect().width + gap;
-    }
+  function maxScroll(t) {
+    return Math.max(0, t.scrollWidth - t.clientWidth);
+  }
 
-    function goTo(idx) {
-      var max = dots.length - 1;
-      idx = Math.max(0, Math.min(max, idx));
-      track.scrollTo({ left: idx * stepWidth(), behavior: 'smooth' });
-    }
+  /* Quantas posicoes de scroll existem de fato: com 4 cards e 2 visiveis sao 3,
+     nao 4. Dots alem disso ficam escondidos. */
+  function pageCount(t) {
+    return Math.round(maxScroll(t) / stepWidth(t)) + 1;
+  }
 
-    prevBtn.addEventListener('click', function () {
-      goTo(Math.round(track.scrollLeft / stepWidth()) - 1);
-    });
-    nextBtn.addEventListener('click', function () {
-      goTo(Math.round(track.scrollLeft / stepWidth()) + 1);
-    });
-    dots.forEach(function (dot) {
-      dot.addEventListener('click', function () {
-        goTo(parseInt(dot.getAttribute('data-idx'), 10));
-      });
-    });
+  function currentIdx(t) {
+    return Math.round(t.scrollLeft / stepWidth(t));
+  }
 
-    var scrollTimer;
-    track.addEventListener('scroll', function () {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(function () {
-        var idx = Math.round(track.scrollLeft / stepWidth());
-        dots.forEach(function (dot, i) {
-          dot.classList.toggle('is-active', i === idx);
-        });
-      }, 80);
+  function goTo(idx) {
+    var t = track();
+    if (!t) return;
+    var left = Math.max(0, Math.min(maxScroll(t), idx * stepWidth(t)));
+    t.scrollTo({ left: left, behavior: 'smooth' });
+  }
+
+  function sync() {
+    var t = track();
+    if (!t) return;
+    var pages = pageCount(t);
+    var idx = Math.min(currentIdx(t), pages - 1);
+    dots().forEach(function (dot, i) {
+      dot.style.display = i < pages ? '' : 'none';
+      dot.classList.toggle('is-active', i === idx);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  document.addEventListener('click', function (e) {
+    var el = e.target;
+    if (!el || !el.closest) return;
+    if (el.closest('#projetos-prev')) { goTo(currentIdx(track()) - 1); return; }
+    if (el.closest('#projetos-next')) { goTo(currentIdx(track()) + 1); return; }
+    var dot = el.closest('.carrossel-dot');
+    if (dot) goTo(parseInt(dot.getAttribute('data-idx'), 10) || 0);
+  });
+
+  /* scroll nao borbulha — capture pega o evento do track mesmo apos re-render */
+  var scrollTimer;
+  document.addEventListener('scroll', function (e) {
+    if (!e.target || e.target.id !== 'projetos-track') return;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(sync, 80);
+  }, true);
+
+  window.addEventListener('resize', sync);
+  document.addEventListener('DOMContentLoaded', sync);
+  window.addEventListener('load', sync);
+  /* o render do x-dc pode acontecer depois do load — re-sincroniza os dots */
+  [0, 300, 1000].forEach(function (ms) { setTimeout(sync, ms); });
 })();
 </script>
 </body>
