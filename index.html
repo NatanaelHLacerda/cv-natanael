@@ -40,6 +40,46 @@
     }
     .projetos-carrossel::-webkit-scrollbar { display: none; }
     .projeto-card { flex: 0 0 calc(50% - 14px); scroll-snap-align: start; }
+
+    /* Cards de altura igual: o corpo cresce e a stack ancora no rodape,
+       independente do tamanho do texto. */
+    .projeto-card-body { display: flex; flex-direction: column; flex: 1 1 auto; }
+    .projeto-desc {
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .projeto-stack { margin-top: auto; }
+
+    /* Carregamento das capas: skeleton com sweep enquanto baixa, fade ao entrar */
+    .projeto-card-media {
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: oklch(0.26 0.03 290);
+    }
+    .projeto-card-media::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(100deg,
+        oklch(0.26 0.03 290) 30%,
+        oklch(0.33 0.045 290) 50%,
+        oklch(0.26 0.03 290) 70%);
+      background-size: 220% 100%;
+      animation: skeletonSweep 1.4s ease-in-out infinite;
+      transition: opacity .35s ease;
+    }
+    .projeto-card-media.is-loaded::after { opacity: 0; animation: none; }
+    .projeto-card-media img { opacity: 0; transition: opacity .5s ease; }
+    .projeto-card-media.is-loaded img { opacity: 1; }
+    @keyframes skeletonSweep { from { background-position: 180% 0; } to { background-position: -80% 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .projeto-card-media::after { animation: none; }
+      .projeto-card-media::after,
+      .projeto-card-media img { transition: none; }
+    }
     .carrossel-btn {
       position: absolute; top: 42%; transform: translateY(-50%);
       width: 44px; height: 44px; border-radius: 50%;
@@ -206,8 +246,8 @@
     <div class="projetos-carrossel" id="projetos-track">
       <!-- Project 1 -->
       <div class="projeto-card" style="border-radius: 24px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;" style-hover="transform: translateY(-6px); border-color: oklch(0.62 0.19 300 / 0.5); box-shadow: 0 20px 50px oklch(0.1 0.02 290 / 0.6), 0 0 0 1px oklch(0.62 0.19 300 / 0.25);">
-        <div style="aspect-ratio: 16/10; overflow: hidden; background: oklch(0.26 0.03 290);">
-          <img src="uploads/pasted-1784414526010-0.png" alt="Tela do sistema Accellera: fila de atendimento em kanban com colunas de status e tickets" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
+        <div class="projeto-card-media">
+          <img loading="lazy" decoding="async" src="uploads/pasted-1784414526010-0.png" alt="Tela do sistema Accellera: fila de atendimento em kanban com colunas de status e tickets" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
         </div>
         <div class="projeto-card-body" style="padding: 32px;">
           <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
@@ -215,10 +255,10 @@
             <span style="font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: oklch(1 0 0 / 0.06); color: oklch(0.75 0.015 290);">Gestão</span>
           </div>
           <h3 class="projeto-titulo" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em;">Sistema de Gestão de Chamados (Accellera)</h3>
-          <p style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
+          <p class="projeto-desc" style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
             Plataforma para uma agência de marketing organizar, priorizar e acompanhar chamados de clientes em tempo real — do pedido à entrega, sem planilha perdida.
           </p>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
+          <div class="projeto-stack" style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
             <span>Flutter</span><span>Dart</span><span>NestJS</span><span>TypeScript</span><span>PostgreSQL</span><span>Docker</span><span>REST API</span>
           </div>
         </div>
@@ -226,8 +266,8 @@
 
       <!-- Project 2 -->
       <div class="projeto-card" style="border-radius: 24px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;" style-hover="transform: translateY(-6px); border-color: oklch(0.62 0.19 300 / 0.5); box-shadow: 0 20px 50px oklch(0.1 0.02 290 / 0.6), 0 0 0 1px oklch(0.62 0.19 300 / 0.25);">
-        <div style="aspect-ratio: 16/10; overflow: hidden; background: oklch(0.26 0.03 290);">
-          <img src="uploads/pasted-1784415608328-0.png" alt="Tela do Mega Hub: Cérebro da marca com estratégia e dados do negócio editáveis" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
+        <div class="projeto-card-media">
+          <img loading="lazy" decoding="async" src="uploads/pasted-1784415608328-0.png" alt="Tela do Mega Hub: Cérebro da marca com estratégia e dados do negócio editáveis" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
         </div>
         <div class="projeto-card-body" style="padding: 32px;">
           <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
@@ -235,10 +275,10 @@
             <span style="font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: oklch(1 0 0 / 0.06); color: oklch(0.75 0.015 290);">Marketing</span>
           </div>
           <h3 class="projeto-titulo" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em;">Esteira Inteligente de Criativos (Mega-Hub)</h3>
-          <p style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
+          <p class="projeto-desc" style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
             Sistema web que usa IA generativa para criar peças prontas para redes sociais em minutos — templates, copy e artes adaptadas à identidade de cada marca.
           </p>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
+          <div class="projeto-stack" style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
             <span>Angular</span><span>TypeScript</span><span>Tailwind CSS</span><span>Supabase</span><span>PostgreSQL</span><span>Node.js</span><span>Gemini API</span>
           </div>
         </div>
@@ -246,8 +286,8 @@
 
       <!-- Project 3 -->
       <div class="projeto-card" style="border-radius: 24px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;" style-hover="transform: translateY(-6px); border-color: oklch(0.62 0.19 300 / 0.5); box-shadow: 0 20px 50px oklch(0.1 0.02 290 / 0.6), 0 0 0 1px oklch(0.62 0.19 300 / 0.25);">
-        <div style="aspect-ratio: 16/10; overflow: hidden; background: oklch(0.26 0.03 290);">
-          <img src="uploads/legalizei-crm.png" alt="Dashboard de Administração do Legalizei CRM: visão Demanda e Mercado com distribuição por categoria de CNAE, faixa de faturamento, distribuição geográfica e cartões marcados como aguardando instrumentação" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
+        <div class="projeto-card-media">
+          <img loading="lazy" decoding="async" src="uploads/legalizei-crm.png" alt="Dashboard de Administração do Legalizei CRM: visão Demanda e Mercado com distribuição por categoria de CNAE, faixa de faturamento, distribuição geográfica e cartões marcados como aguardando instrumentação" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
         </div>
         <div class="projeto-card-body" style="padding: 32px;">
           <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
@@ -255,10 +295,10 @@
             <span style="font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: oklch(1 0 0 / 0.06); color: oklch(0.75 0.015 290);">Back-office</span>
           </div>
           <h3 class="projeto-titulo" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em;">Legalizei CRM — Operação e Métricas da Abertura de Empresa</h3>
-          <p style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
-            Painel desktop que a equipe usa pra tocar a abertura de empresa do outro lado do app: kanban que anda sozinho conforme o estado real do lead, fila do certificado digital, base de clientes ativos e dashboards de funil. Todo número exibido vem do banco — métrica sem fonte aparece como pendência com o motivo escrito, nunca como zero disfarçado. Acesso por perfil, com dado pessoal do cliente atrás de papel e trilha de auditoria append-only.
+          <p class="projeto-desc" style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
+            Painel que a equipe usa pra tocar a abertura de empresa do outro lado do app: kanban que anda sozinho conforme o estado real do lead, fila do certificado digital e dashboards de funil. Todo número vem do banco — métrica sem fonte vira pendência com o motivo escrito, nunca zero disfarçado. Acesso por perfil e auditoria append-only.
           </p>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
+          <div class="projeto-stack" style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
             <span>React 19</span><span>TypeScript</span><span>Vite</span><span>React Router</span><span>Supabase</span><span>PostgreSQL + RLS</span><span>Edge Functions (Deno)</span><span>Vercel</span>
           </div>
         </div>
@@ -266,8 +306,8 @@
 
       <!-- Project 4 -->
       <div class="projeto-card" style="border-radius: 24px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;" style-hover="transform: translateY(-6px); border-color: oklch(0.62 0.19 300 / 0.5); box-shadow: 0 20px 50px oklch(0.1 0.02 290 / 0.6), 0 0 0 1px oklch(0.62 0.19 300 / 0.25);">
-        <div style="aspect-ratio: 16/10; overflow: hidden; background: oklch(0.26 0.03 290);">
-          <img src="uploads/leghub.png" alt="Dashboard do Leghub: visão geral dos clientes da Legalize Group com totais por status, distribuição por regime de tributação e ranking dos maiores grupos" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
+        <div class="projeto-card-media">
+          <img loading="lazy" decoding="async" src="uploads/leghub.png" alt="Dashboard do Leghub: visão geral dos clientes da Legalize Group com totais por status, distribuição por regime de tributação e ranking dos maiores grupos" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block;">
         </div>
         <div class="projeto-card-body" style="padding: 32px;">
           <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
@@ -275,10 +315,10 @@
             <span style="font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: oklch(1 0 0 / 0.06); color: oklch(0.75 0.015 290);">Gestão</span>
           </div>
           <h3 class="projeto-titulo" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em;">Leghub — Painel Interno de Gestão Contábil</h3>
-          <p style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
+          <p class="projeto-desc" style="font-size: 15.5px; line-height: 1.65; color: oklch(0.75 0.015 290); margin: 0 0 20px;">
             Dashboard interno para o time de contabilidade organizar clientes, processos fiscais e tarefas em Kanban — do cadastro à entrega, com perfis de acesso (admin/gestor/usuário) protegendo dados sensíveis como CNPJ e CPF.
           </p>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
+          <div class="projeto-stack" style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: oklch(0.6 0.015 290);">
             <span>Next.js</span><span>TypeScript</span><span>Prisma</span><span>PostgreSQL</span><span>Tailwind CSS</span><span>Radix UI</span>
           </div>
         </div>
@@ -421,7 +461,10 @@ class Component extends DCLogic {
     var pages = pageCount(t);
     var idx = Math.min(currentIdx(t), pages - 1);
     dots().forEach(function (dot, i) {
-      dot.style.display = i < pages ? '' : 'none';
+      var display = i < pages ? '' : 'none';
+      /* so escreve quando muda — o MutationObserver abaixo observa o DOM e
+         reescrever atributo igual realimentaria o observer */
+      if (dot.style.display !== display) dot.style.display = display;
       dot.classList.toggle('is-active', i === idx);
     });
   }
@@ -445,9 +488,39 @@ class Component extends DCLogic {
 
   window.addEventListener('resize', sync);
   document.addEventListener('DOMContentLoaded', sync);
-  window.addEventListener('load', sync);
-  /* o render do x-dc pode acontecer depois do load — re-sincroniza os dots */
-  [0, 300, 1000].forEach(function (ms) { setTimeout(sync, ms); });
+  /* Capas: enquanto a imagem nao chega o wrapper mostra o skeleton; ao carregar
+     (ou falhar) marca is-loaded e a imagem entra em fade. Roda de novo a cada
+     re-render porque o React recria as <img> sem a classe. */
+  function syncMedia() {
+    var medias = document.querySelectorAll('.projeto-card-media');
+    Array.prototype.forEach.call(medias, function (media) {
+      var img = media.querySelector('img');
+      if (!img) return;
+      if (img.complete && img.naturalWidth > 0) {
+        media.classList.add('is-loaded');
+        return;
+      }
+      if (img.dataset.mediaBound) return;
+      img.dataset.mediaBound = '1';
+      var done = function () { media.classList.add('is-loaded'); };
+      img.addEventListener('load', done);
+      img.addEventListener('error', done);
+    });
+  }
+
+  function syncAll() { sync(); syncMedia(); }
+
+  window.addEventListener('load', syncAll);
+  if (window.MutationObserver) {
+    var frame;
+    var observer = new MutationObserver(function () {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(syncAll);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+  /* o render do x-dc pode acontecer depois do load — re-sincroniza dots e capas */
+  [0, 300, 1000].forEach(function (ms) { setTimeout(syncAll, ms); });
 })();
 </script>
 </body>
