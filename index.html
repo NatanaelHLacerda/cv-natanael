@@ -139,6 +139,8 @@
       #habilidades { padding: 40px 20px 130px !important; }
       .habilidades-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
       .skill-card { padding: 20px 18px !important; }
+      .skill-titulo { font-size: 16px !important; margin-bottom: 12px !important; }
+      .skill-itens { font-size: 14px !important; gap: 7px !important; }
 
       .rodape-section { padding: 0 20px 40px !important; }
     }
@@ -158,7 +160,11 @@
       .projeto-titulo { font-size: 19px !important; }
 
       #habilidades { padding: 32px 16px 130px !important; }
-      .habilidades-grid { grid-template-columns: 1fr !important; }
+      /* mantem 2 por linha no celular — 1 coluna alongava demais a secao */
+      .habilidades-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+      .skill-card { padding: 18px 15px !important; }
+      .skill-titulo { font-size: 15px !important; margin-bottom: 10px !important; }
+      .skill-itens { font-size: 13.5px !important; gap: 6px !important; line-height: 1.35; }
 
       .rodape-section { padding: 0 16px 40px !important; }
     }
@@ -342,26 +348,26 @@
 
     <div class="habilidades-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
       <div class="skill-card" style="padding: 28px 24px; border-radius: 20px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;" style-hover="transform: translateY(-4px); border-color: oklch(0.62 0.19 300 / 0.4); background: oklch(0.22 0.025 290);">
-        <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">Frontend</div>
-        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290);">
+        <div class="skill-titulo" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">Frontend</div>
+        <div class="skill-itens" style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290); overflow-wrap: anywhere;">
           <span>Angular</span><span>Flutter / Dart</span><span>TypeScript</span><span>Tailwind CSS</span>
         </div>
       </div>
       <div class="skill-card" style="padding: 28px 24px; border-radius: 20px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;" style-hover="transform: translateY(-4px); border-color: oklch(0.62 0.19 300 / 0.4); background: oklch(0.22 0.025 290);">
-        <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">Backend</div>
-        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290);">
+        <div class="skill-titulo" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">Backend</div>
+        <div class="skill-itens" style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290); overflow-wrap: anywhere;">
           <span>Node.js</span><span>NestJS</span><span>PostgreSQL</span><span>Supabase</span><span>REST / GraphQL</span>
         </div>
       </div>
       <div class="skill-card" style="padding: 28px 24px; border-radius: 20px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;" style-hover="transform: translateY(-4px); border-color: oklch(0.62 0.19 300 / 0.4); background: oklch(0.22 0.025 290);">
-        <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">IA &amp; Dados</div>
-        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290);">
+        <div class="skill-titulo" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">IA &amp; Dados</div>
+        <div class="skill-itens" style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290); overflow-wrap: anywhere;">
           <span>OpenClaw</span><span>Gemini API</span><span>Engenheiro de prompt</span><span>Machine Learning</span>
         </div>
       </div>
       <div class="skill-card" style="padding: 28px 24px; border-radius: 20px; background: oklch(0.2 0.02 290); border: 1px solid oklch(1 0 0 / 0.08); transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;" style-hover="transform: translateY(-4px); border-color: oklch(0.62 0.19 300 / 0.4); background: oklch(0.22 0.025 290);">
-        <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">Infra</div>
-        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290);">
+        <div class="skill-titulo" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 14px;">Infra</div>
+        <div class="skill-itens" style="display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: oklch(0.75 0.015 290); overflow-wrap: anywhere;">
           <span>Azure</span><span>Docker</span><span>CI/CD</span>
         </div>
       </div>
